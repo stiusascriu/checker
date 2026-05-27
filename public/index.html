@@ -43,8 +43,8 @@
             "Promo code not found.\nPages checked: " + data.checked;
         }
       } catch (e) {
-        result.textContent = "Error while scanning.";
-      }
+  result.textContent = "Error while scanning:\n" + e.message;
+}
     }
   </script>
 </body>
