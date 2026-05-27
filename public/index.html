@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Promo Code Scanner</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 50px auto; padding: 20px; }
+    input, button { width: 100%; padding: 12px; margin-top: 10px; font-size: 16px; }
+    button { cursor: pointer; }
+    #result { margin-top: 20px; padding: 15px; background: #f3f3f3; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h2>Promo Code Scanner</h2>
+
+  <p>Enter a website URL. It will search for <b>1€</b> or <b>1 €</b>.</p>
+
+  <input id="urlInput" placeholder="https://example.com" />
+  <button onclick="scan()">Scan Website</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function scan() {
+      const targetUrl = document.getElementById("urlInput").value.trim();
+      const result = document.getElementById("result");
+
+      if (!targetUrl) {
+        result.textContent = "Please enter a URL.";
+        return;
+      }
+
+      result.textContent = "Scanning... This may take a while.";
+
+      try {
+        const res = await fetch("/scan?url=" + encodeURIComponent(targetUrl));
+        const data = await res.json();
+
+        if (data.found) {
+          result.innerHTML =
+            "FOUND!\n\nURL: <a href='" + data.url + "' target='_blank'>" + data.url + "</a>\nPages checked: " + data.checked;
+        } else {
+          result.textContent =
+            "Promo code not found.\nPages checked: " + data.checked;
+        }
+      } catch (e) {
+        result.textContent = "Error while scanning.";
+      }
+    }
+  </script>
+</body>
+</html>
