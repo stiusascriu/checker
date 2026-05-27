@@ -33,7 +33,15 @@
 
       try {
         const res = await fetch("/scan?url=" + encodeURIComponent(targetUrl));
-        const data = await res.json();
+        const text = await res.text();
+
+let data;
+try {
+  data = JSON.parse(text);
+} catch {
+  result.textContent = "Server returned non-JSON response:\n\n" + text;
+  return;
+}
 
         if (data.found) {
           result.innerHTML =
